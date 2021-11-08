@@ -26,7 +26,16 @@ class PatientController extends Controller
      */
     public function store(PatientRequest $request)
     {
-        //check if request if valid
-        
+        try{
+            $patient = Patient::create($request->validated());
+        } catch(\PDOException $e) {
+            $request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', 'Some DB error occurred! Try Again!');
+			return back()->withInput();
+        }
+
+		$request->session()->flash('message.level', 'success');
+		$request->session()->flash('message.content', 'Patient added successfully.');
+		return back(); 
     }
 }

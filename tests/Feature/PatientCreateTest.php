@@ -2,17 +2,30 @@
 
 namespace Tests\Feature;
 
+use App\Models\Patient;
 use Faker\Factory;
 use Tests\TestCase;
+use Illuminate\Support\Str;
 use Tests\Interfaces\FormsTestInterface;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class PatientCreateTest extends TestCase implements FormsTestInterface
 {
-    //use DatabaseMigrations;
+    use DatabaseMigrations, WithFaker;
+
+    protected function setUp():void
+    {
+        /**
+         * This disables the exception handling to display the stacktrace on the console
+         * the same way as it shown on the browser
+         */
+        parent::setUp();
+        //$this->withoutExceptionHandling();
+    }
 
     /**
-     * A basic feature test example.
+     * Test if form page laods.
      *
      * @return void
      */
@@ -46,7 +59,7 @@ class PatientCreateTest extends TestCase implements FormsTestInterface
             'validation_test_invalid' => [
                 'data' => [
                     'name' => 'as',
-                    'address' => $faker->regexify('[A-Za-z ]{1001}'),
+                    'address' => Str::random(1001),
                     'phone' => $faker->word(),
                     'email' => $faker->word(),
                 ],
@@ -66,7 +79,7 @@ class PatientCreateTest extends TestCase implements FormsTestInterface
      * @param bool $shouldPass
      * @param array $mockedRequestData
      */
-    public function validation_results_as_expected($mockedRequestData, $errors)
+    public function test_validation_results_as_expected($mockedRequestData, $errors)
     {
         $response = $this->from('/patient/create')->post('/patient/create', $mockedRequestData);
         if(is_array($errors)){
@@ -75,5 +88,18 @@ class PatientCreateTest extends TestCase implements FormsTestInterface
         elseif($errors == true){
             $response->assertValid();
         }
+    }
+
+    /**
+     * Test if patient post works successfully
+     * @testdox Test if patient form submits successfully and returns success message
+     * @return void
+     */
+    public function test_patient_post_is_successful()
+    {
+        $patientData = Patient::factory()->raw();
+        $response = $this->from('/patient/create')->post('/patient/create', $patientData);
+        $response->assertSessionHas('message.level', 'success');
+        $this->assertDatabaseHas(app(Patient::class)->getTable(),$patientData);
     }
 }

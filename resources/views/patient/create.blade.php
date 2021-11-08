@@ -15,35 +15,35 @@
                 {{ csrf_field() }}
                 <div class="form-group">
                     <label for="name">Name <span class="text-danger">*</span></label>
-                    <input type="text" class="@error('name') is-invalid @enderror form-control" name="name">
+                    <input type="text" class="@error('name') is-invalid @enderror form-control" name="name" value="{{ old('name') }}">
                     @error('name')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group">
                     <label for="address">Address <span class="text-danger">*</span></label>
-                    <input type="text" class="@error('address') is-invalid @enderror form-control" name="address">
+                    <input type="text" class="@error('address') is-invalid @enderror form-control" name="address" value="{{ old('address') }}">
                     @error('address')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group">
                     <label for="phone">Phone <span class="text-danger">*</span></label>
-                    <input type="text" class="@error('phone') is-invalid @enderror form-control" name="phone">
+                    <input type="text" class="@error('phone') is-invalid @enderror form-control" name="phone" value="{{ old('phone') }}">
                     @error('phone')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group">
                     <label for="email">Email Address <span class="text-danger">*</span></label>
-                    <input type="email" class="@error('email') is-invalid @enderror form-control" name="email">
+                    <input type="email" class="@error('email') is-invalid @enderror form-control" name="email" value="{{ old('email') }}">
                     @error('email')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group">
                     <label for="symptoms">Patient Symptoms</label>
-                    <textarea class="form-control" rows="3" class="@error('symptoms') is-invalid @enderror" name="symptoms"></textarea>
+                    <textarea class="form-control" rows="3" class="@error('symptoms') is-invalid @enderror" name="symptoms">{{ old('symptoms') }}</textarea>
                     @error('symptoms')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
