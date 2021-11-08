@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Patient;
 use App\Http\Requests\PatientRequest;
+use App\Events\PatientRegisteredEvent;
 
 class PatientController extends Controller
 {
@@ -33,6 +34,8 @@ class PatientController extends Controller
 			$request->session()->flash('message.content', 'Some DB error occurred! Try Again!');
 			return back()->withInput();
         }
+
+        event(new PatientRegisteredEvent($patient));
 
 		$request->session()->flash('message.level', 'success');
 		$request->session()->flash('message.content', 'Patient added successfully.');
