@@ -1,6 +1,7 @@
 # Snapforms Coding Challenge
 
 ## Setup
+* Copy provided .env.docker and .env.docker.testing to project
 * Install [Docker](https://docs.docker.com/get-started/)
 * Build: `docker compose build`
 * Run: `docker compose up`
