@@ -1,0 +1,77 @@
+version: '3.8'
+services:
+
+  #PHP Service
+  snapforms-backend:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    image: backend
+    container_name: snapforms-backend
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www
+    depends_on:
+      - snapformsdb
+      - snapformstestdb
+    volumes:
+      - ./:/var/www
+      - '/var/www/vendor'
+    networks:
+      - snapforms-app-network
+
+  #Nginx Service
+  snapforms-webserver:
+    image: nginx:alpine
+    container_name: snapforms-webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - snapforms-app-network
+
+  # Database
+  snapformsdb:
+    image: mysql:8.0
+    container_name: snapforms-database
+    environment:
+        - "MYSQL_DATABASE=${DB_DATABASE}"
+        - "MYSQL_ROOT_PASSWORD=${DB_PASSWORD}"
+        - "MYSQL_ROOT_HOST=%"
+    ports: 
+        - 3306:3306
+    volumes:
+        - dbsnapdata:/var/lib/mysql
+    networks:
+      - snapforms-app-network
+
+  # Testing Database
+  snapformstestdb:
+    image: mysql:8.0
+    container_name: snapforms-test-database
+    environment:
+        - "MYSQL_DATABASE=${DB_DATABASE}"
+        - "MYSQL_ROOT_PASSWORD=${DB_PASSWORD}"
+        - "MYSQL_ROOT_HOST=%"
+    volumes:
+        - testdbsnapdata:/var/lib/mysql
+    ports: 
+        - 3308:3306
+    networks:
+      - snapforms-app-network
+
+#Docker Networks
+networks:
+  snapforms-app-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  dbsnapdata:
+    driver: local
+  testdbsnapdata:
+    driver: local

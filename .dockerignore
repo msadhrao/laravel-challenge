@@ -1,0 +1,10 @@
+.git
+.env
+.env.testing
+.env.docker
+.env.docker.testing
+vendor
+docker
+storage/framework/cache/**
+storage/framework/sessions/**
+storage/framework/views/**
